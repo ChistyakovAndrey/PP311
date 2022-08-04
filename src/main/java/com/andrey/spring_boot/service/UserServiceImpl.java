@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public void addUser(User user) {
         System.out.println("user.name: " + user.getId());
         userDao.addUser(user);

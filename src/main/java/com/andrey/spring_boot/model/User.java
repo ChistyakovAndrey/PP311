@@ -8,8 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-@Component
-@Scope("prototype")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

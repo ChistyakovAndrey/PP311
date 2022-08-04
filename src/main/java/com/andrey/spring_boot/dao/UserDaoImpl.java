@@ -1,8 +1,6 @@
 package com.andrey.spring_boot.dao;
 
 import com.andrey.spring_boot.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,20 +12,9 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    LocalContainerEntityManagerFactoryBean entityManagerFactory;
-    @Autowired
-    public UserDaoImpl(LocalContainerEntityManagerFactoryBean entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
-    }
-
-    private EntityManager getManager() {
-        return entityManagerFactory.getObject().createEntityManager();
-    }
-
-
     @Override
     public List<User> getAllUsers() {
-        return getManager().createQuery("select u FROM User u").getResultList();
+        return entityManager.createQuery("select u FROM User u").getResultList();
     }
     @Override
     public void addUser(User user) {
@@ -37,14 +24,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserById(Integer id) {
-        String query = "from User where id = " + id;
-        List<User> list = entityManager.createQuery(query).getResultList();
-        return list.get(0);
+        return entityManager.find(User.class, id);
     }
 
     @Override
     public void deleteUserById(int id) {
-        String query = "delete from User where id = " + id;
-        entityManager.createQuery(query).executeUpdate();
+        User user = entityManager.find(User.class, id);
+        entityManager.remove(user);
     }
 }
